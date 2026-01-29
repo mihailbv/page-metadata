@@ -16,8 +16,10 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "build:watch": "tsc -p tsconfig.json --watch",
     "start": "node dist/server.js",
-    "dev": "PORT=3005 REDIS_URL=redis://127.0.0.1:6379 tsx watch server.ts",
+    "dev:server": "PORT=3005 REDIS_URL=redis://127.0.0.1:6379 node --watch dist/server.js",
+    "dev": "yarn build && (yarn build:watch & yarn dev:server)",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage"
   },
