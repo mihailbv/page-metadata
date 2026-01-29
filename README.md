@@ -37,6 +37,7 @@ yarn install
 ### Production
 
 ```bash
+yarn build
 yarn start
 ```
 
@@ -163,15 +164,20 @@ This will write an HTML report to `coverage/`.
 
 ## Project structure
 
-- `server.js`
+- `server.ts`
   - Starts the HTTP server.
-- `src/app.js`
+- `src/app.ts`
   - Express app wiring (CORS + routes).
-- `src/routes/health.js`
+- `src/routes/health.ts`
   - `/health` endpoint.
-- `src/routes/metadata.js`
+- `src/routes/metadata.ts`
   - `/metadata` endpoint.
-- `src/metadataUtils.js`
+- `src/metadataUtils.ts`
   - URL validation, response size limiting, and metadata extraction.
-- `src/redis.js`
+- `src/redis.ts`
   - Redis client + readiness tracking.
+
+Build output:
+
+- `dist/`
+  - Compiled JavaScript output from `tsc` (used by `yarn start`).
