@@ -1,11 +1,11 @@
 import { load } from "cheerio";
 
-export function parseAndValidateUrl(rawUrl) {
+export function parseAndValidateUrl(rawUrl: unknown): URL {
   if (!rawUrl || typeof rawUrl !== "string") {
     throw new Error("Missing 'url' query parameter");
   }
 
-  let u;
+  let u: URL;
   try {
     u = new URL(rawUrl);
   } catch {
@@ -19,7 +19,12 @@ export function parseAndValidateUrl(rawUrl) {
   return u;
 }
 
-export async function readBodyWithLimit(response, maxBytes) {
+type ResponseLike = {
+  headers: Headers;
+  body: ReadableStream<Uint8Array> | null;
+};
+
+export async function readBodyWithLimit(response: ResponseLike, maxBytes: number): Promise<string> {
   const contentLengthHeader = response.headers.get("content-length");
   if (contentLengthHeader) {
     const contentLength = Number(contentLengthHeader);
@@ -33,7 +38,7 @@ export async function readBodyWithLimit(response, maxBytes) {
   }
 
   const reader = response.body.getReader();
-  const chunks = [];
+  const chunks: Uint8Array[] = [];
   let total = 0;
 
   while (true) {
@@ -58,7 +63,7 @@ export async function readBodyWithLimit(response, maxBytes) {
   return new TextDecoder("utf-8").decode(merged);
 }
 
-function pickFirstNonEmpty(values) {
+function pickFirstNonEmpty(values: Array<unknown>): string | null {
   for (const v of values) {
     if (typeof v === "string") {
       const trimmed = v.trim();
@@ -68,7 +73,7 @@ function pickFirstNonEmpty(values) {
   return null;
 }
 
-function resolveMaybeRelativeUrl(href, base) {
+function resolveMaybeRelativeUrl(href: unknown, base: string): string | null {
   if (!href || typeof href !== "string") return null;
   try {
     return new URL(href, base).toString();
@@ -77,11 +82,22 @@ function resolveMaybeRelativeUrl(href, base) {
   }
 }
 
-export function extractMetadata(html, baseUrl) {
+export type ExtractedMetadata = {
+  title: string | null;
+  description: string | null;
+  image: string | null;
+  siteName: string | null;
+  type: string | null;
+  locale: string | null;
+  canonicalUrl: string | null;
+  favicon: string | null;
+};
+
+export function extractMetadata(html: string, baseUrl: string): ExtractedMetadata {
   const $ = load(html);
 
-  const metaByName = (name) => $("meta[name='" + name + "']").attr("content");
-  const metaByProperty = (prop) => $("meta[property='" + prop + "']").attr("content");
+  const metaByName = (name: string) => $("meta[name='" + name + "']").attr("content");
+  const metaByProperty = (prop: string) => $("meta[property='" + prop + "']").attr("content");
 
   const title = pickFirstNonEmpty([
     metaByProperty("og:title"),
@@ -95,10 +111,7 @@ export function extractMetadata(html, baseUrl) {
     metaByName("description"),
   ]);
 
-  const image = pickFirstNonEmpty([
-    metaByProperty("og:image"),
-    metaByName("twitter:image"),
-  ]);
+  const image = pickFirstNonEmpty([metaByProperty("og:image"), metaByName("twitter:image")]);
 
   const siteName = pickFirstNonEmpty([metaByProperty("og:site_name")]);
   const type = pickFirstNonEmpty([metaByProperty("og:type")]);

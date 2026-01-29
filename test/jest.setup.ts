@@ -2,16 +2,16 @@ import dns from "node:dns";
 
 const originalLookup = dns.lookup;
 
-dns.lookup = function lookup(hostname, options, callback) {
+(dns as any).lookup = function lookup(hostname: string, options: any, callback: any) {
   if (hostname === "localhost") {
     hostname = "127.0.0.1";
   }
-  return originalLookup.call(this, hostname, options, callback);
+  return (originalLookup as any).call(this, hostname, options, callback);
 };
 
 if (dns.promises?.lookup) {
   const originalPromisesLookup = dns.promises.lookup.bind(dns.promises);
-  dns.promises.lookup = async (hostname, options) => {
+  (dns.promises as any).lookup = async (hostname: string, options: any) => {
     if (hostname === "localhost") {
       hostname = "127.0.0.1";
     }

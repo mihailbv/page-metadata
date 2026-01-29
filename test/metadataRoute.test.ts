@@ -2,7 +2,13 @@ import request from "supertest";
 import { jest } from "@jest/globals";
 import { createApp } from "../src/app.js";
 
-function makeHtmlResponse(html, { url, status = 200, contentType = "text/html" } = {}) {
+type HtmlResponseOptions = {
+  url?: string;
+  status?: number;
+  contentType?: string;
+};
+
+function makeHtmlResponse(html: string, { url, status = 200, contentType = "text/html" }: HtmlResponseOptions = {}) {
   const res = new Response(html, {
     status,
     headers: {
@@ -76,9 +82,7 @@ describe("GET /metadata", () => {
       </html>
     `;
 
-    jest
-      .spyOn(globalThis, "fetch")
-      .mockResolvedValue(makeHtmlResponse(html, { url: "https://example.com/final" }));
+    jest.spyOn(globalThis, "fetch").mockResolvedValue(makeHtmlResponse(html, { url: "https://example.com/final" }));
 
     const app = createApp();
 

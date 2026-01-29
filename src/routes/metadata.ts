@@ -1,3 +1,4 @@
+import type { Request, Response } from "express";
 import { Router } from "express";
 import { CACHE_TTL_SECONDS, FETCH_TIMEOUT_MS, MAX_BYTES } from "../config.js";
 import { redisClient, getRedisReady } from "../redis.js";
@@ -6,7 +7,7 @@ import { extractMetadata, parseAndValidateUrl, readBodyWithLimit } from "../meta
 export function createMetadataRouter() {
   const router = Router();
 
-  router.get("/metadata", async (req, res) => {
+  router.get("/metadata", async (req: Request, res: Response) => {
     try {
       const url = parseAndValidateUrl(req.query.url);
       const cacheKey = `page-metadata:v1:${url.toString()}`;

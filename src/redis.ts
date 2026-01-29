@@ -3,7 +3,9 @@ import { REDIS_URL } from "./config.js";
 
 let redisReady = false;
 
-export const redisClient = REDIS_URL ? createClient({ url: REDIS_URL }) : null;
+export const redisClient: ReturnType<typeof createClient> | null = REDIS_URL
+  ? createClient({ url: REDIS_URL })
+  : null;
 
 if (redisClient) {
   redisClient.on("error", (err) => console.log("Redis Client Error", err));

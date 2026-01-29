@@ -1,19 +1,27 @@
 import { jest } from "@jest/globals";
 
-function createFakeRedisClient({ isOpen = false, isReady = false } = {}) {
-  const listeners = new Map();
+type FakeClient = {
+  isOpen: boolean;
+  isReady: boolean;
+  on: any;
+  emit: (event: string, ...args: any[]) => void;
+  connect: jest.MockedFunction<() => Promise<void>>;
+};
+
+function createFakeRedisClient({ isOpen = false, isReady = false } = {}): FakeClient {
+  const listeners = new Map<string, Function>();
 
   return {
     isOpen,
     isReady,
-    on: jest.fn((event, handler) => {
+    on: jest.fn((event: string, handler: Function) => {
       listeners.set(event, handler);
     }),
-    emit: (event, ...args) => {
+    emit: (event: string, ...args: any[]) => {
       const handler = listeners.get(event);
       if (handler) handler(...args);
     },
-    connect: jest.fn().mockResolvedValue(undefined),
+    connect: jest.fn(() => Promise.resolve()) as unknown as jest.MockedFunction<() => Promise<void>>,
   };
 }
 
@@ -43,13 +51,13 @@ describe("redis readiness state", () => {
     expect(redisClient).toBe(fakeClient);
     expect(getRedisReady()).toBe(false);
 
-    redisClient.emit("ready");
+    (redisClient as any).emit("ready");
     expect(getRedisReady()).toBe(true);
 
-    redisClient.emit("end");
+    (redisClient as any).emit("end");
     expect(getRedisReady()).toBe(false);
 
-    redisClient.emit("error", new Error("boom"));
+    (redisClient as any).emit("error", new Error("boom"));
     expect(getRedisReady()).toBe(false);
 
     const status = getRedisStatus();
