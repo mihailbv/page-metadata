@@ -1,8 +1,8 @@
 import type { Request, Response } from "express";
 import { Router } from "express";
-import { CACHE_TTL_SECONDS, FETCH_TIMEOUT_MS, MAX_BYTES } from "../config.js";
-import { redisClient, getRedisReady } from "../redis.js";
-import { extractMetadata, parseAndValidateUrl, readBodyWithLimit } from "../metadataUtils.js";
+import { CACHE_TTL_SECONDS, FETCH_TIMEOUT_MS, MAX_BYTES } from "#config";
+import { redisClient, getRedisReady } from "#redis";
+import { extractMetadata, parseAndValidateUrl, readBodyWithLimit } from "#metadataUtils";
 
 export function createMetadataRouter() {
   const router = Router();

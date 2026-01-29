@@ -1,6 +1,6 @@
 import request from "supertest";
 import { jest } from "@jest/globals";
-import { createApp } from "../src/app.js";
+import { createApp } from "#app";
 
 type HtmlResponseOptions = {
   url?: string;
@@ -40,13 +40,13 @@ describe("GET /metadata cache behavior", () => {
       setEx: jest.fn(() => Promise.resolve()),
     };
 
-    jest.unstable_mockModule("../src/config.js", () => ({
+    jest.unstable_mockModule("#config", () => ({
       CACHE_TTL_SECONDS: 300,
       FETCH_TIMEOUT_MS: 12_000,
       MAX_BYTES: 1_500_000,
       REDIS_URL: "redis://fake",
     }));
-    jest.unstable_mockModule("../src/redis.js", () => ({
+    jest.unstable_mockModule("#redis", () => ({
       redisClient: fakeRedisClient,
       getRedisReady: () => true,
       getRedisStatus: () => ({
@@ -58,7 +58,7 @@ describe("GET /metadata cache behavior", () => {
       }),
     }));
 
-    const { createApp: createAppWithRedis } = await import("../src/app.js");
+    const { createApp: createAppWithRedis } = await import("#app");
 
     const fetchSpy = jest.spyOn(globalThis, "fetch");
 
@@ -78,13 +78,13 @@ describe("GET /metadata cache behavior", () => {
       setEx: jest.fn(() => Promise.resolve()),
     };
 
-    jest.unstable_mockModule("../src/config.js", () => ({
+    jest.unstable_mockModule("#config", () => ({
       CACHE_TTL_SECONDS: 300,
       FETCH_TIMEOUT_MS: 12_000,
       MAX_BYTES: 1_500_000,
       REDIS_URL: "redis://fake",
     }));
-    jest.unstable_mockModule("../src/redis.js", () => ({
+    jest.unstable_mockModule("#redis", () => ({
       redisClient: fakeRedisClient,
       getRedisReady: () => true,
       getRedisStatus: () => ({
@@ -96,7 +96,7 @@ describe("GET /metadata cache behavior", () => {
       }),
     }));
 
-    const { createApp: createAppWithRedis } = await import("../src/app.js");
+    const { createApp: createAppWithRedis } = await import("#app");
 
     const html = "<html><head><title>Hello</title></head><body></body></html>";
     jest.spyOn(globalThis, "fetch").mockResolvedValue(makeHtmlResponse(html, { url: "https://example.com/final" }));
@@ -120,13 +120,13 @@ describe("GET /metadata cache behavior", () => {
       setEx: jest.fn(() => Promise.resolve()),
     };
 
-    jest.unstable_mockModule("../src/config.js", () => ({
+    jest.unstable_mockModule("#config", () => ({
       CACHE_TTL_SECONDS: 300,
       FETCH_TIMEOUT_MS: 12_000,
       MAX_BYTES: 1_500_000,
       REDIS_URL: "redis://fake",
     }));
-    jest.unstable_mockModule("../src/redis.js", () => ({
+    jest.unstable_mockModule("#redis", () => ({
       redisClient: fakeRedisClient,
       getRedisReady: () => true,
       getRedisStatus: () => ({
@@ -138,7 +138,7 @@ describe("GET /metadata cache behavior", () => {
       }),
     }));
 
-    const { createApp: createAppWithRedis } = await import("../src/app.js");
+    const { createApp: createAppWithRedis } = await import("#app");
 
     jest.spyOn(globalThis, "fetch").mockResolvedValue(
       makeHtmlResponse("<html><head><title>Hello</title></head><body></body></html>", { url: "https://example.com/final" })
@@ -152,14 +152,14 @@ describe("GET /metadata cache behavior", () => {
   });
 
   test("sets x-cache BYPASS when redis is disabled", async () => {
-    jest.unstable_mockModule("../src/config.js", () => ({
+    jest.unstable_mockModule("#config", () => ({
       CACHE_TTL_SECONDS: 300,
       FETCH_TIMEOUT_MS: 12_000,
       MAX_BYTES: 1_500_000,
       REDIS_URL: "",
     }));
 
-    const { createApp: createAppWithNoRedis } = await import("../src/app.js");
+    const { createApp: createAppWithNoRedis } = await import("#app");
 
     jest.spyOn(globalThis, "fetch").mockResolvedValue(makeHtmlResponse("<html></html>", { url: "https://example.com/" }));
 

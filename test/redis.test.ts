@@ -42,11 +42,11 @@ describe("redis readiness state", () => {
     jest.unstable_mockModule("redis", () => ({
       createClient: () => fakeClient,
     }));
-    jest.unstable_mockModule("../src/config.js", () => ({
+    jest.unstable_mockModule("#config", () => ({
       REDIS_URL: "redis://fake",
     }));
 
-    const { redisClient, getRedisReady, getRedisStatus } = await import("../src/redis.js");
+    const { redisClient, getRedisReady, getRedisStatus } = await import("#redis");
 
     expect(redisClient).toBe(fakeClient);
     expect(getRedisReady()).toBe(false);
@@ -76,11 +76,11 @@ describe("redis readiness state", () => {
         throw new Error("should not create client when REDIS_URL is falsy");
       },
     }));
-    jest.unstable_mockModule("../src/config.js", () => ({
+    jest.unstable_mockModule("#config", () => ({
       REDIS_URL: "",
     }));
 
-    const { redisClient, getRedisReady, getRedisStatus } = await import("../src/redis.js");
+    const { redisClient, getRedisReady, getRedisStatus } = await import("#redis");
 
     expect(redisClient).toBe(null);
     expect(getRedisReady()).toBe(false);
@@ -102,11 +102,11 @@ describe("redis readiness state", () => {
     jest.unstable_mockModule("redis", () => ({
       createClient: () => fakeClient,
     }));
-    jest.unstable_mockModule("../src/config.js", () => ({
+    jest.unstable_mockModule("#config", () => ({
       REDIS_URL: "redis://fake",
     }));
 
-    await import("../src/redis.js");
+    await import("#redis");
 
     expect(fakeClient.connect).toHaveBeenCalledTimes(1);
   });
@@ -121,11 +121,11 @@ describe("redis readiness state", () => {
     jest.unstable_mockModule("redis", () => ({
       createClient: () => fakeClient,
     }));
-    jest.unstable_mockModule("../src/config.js", () => ({
+    jest.unstable_mockModule("#config", () => ({
       REDIS_URL: "redis://fake",
     }));
 
-    const { getRedisReady } = await import("../src/redis.js");
+    const { getRedisReady } = await import("#redis");
 
     await new Promise((r) => setTimeout(r, 0));
     expect(getRedisReady()).toBe(false);

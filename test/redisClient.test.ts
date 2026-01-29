@@ -6,11 +6,11 @@ describe("redis client export shape", () => {
   });
 
   test("redisClient is null when REDIS_URL is empty", async () => {
-    jest.unstable_mockModule("../src/config.js", () => ({
+    jest.unstable_mockModule("#config", () => ({
       REDIS_URL: "",
     }));
 
-    const { redisClient } = await import("../src/redis.js");
+    const { redisClient } = await import("#redis");
     expect(redisClient).toBe(null);
   });
 });

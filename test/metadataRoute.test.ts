@@ -1,6 +1,6 @@
 import request from "supertest";
 import { jest } from "@jest/globals";
-import { createApp } from "../src/app.js";
+import { createApp } from "#app";
 
 type HtmlResponseOptions = {
   url?: string;

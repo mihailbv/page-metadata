@@ -1,4 +1,4 @@
-import { extractMetadata, parseAndValidateUrl, readBodyWithLimit } from "../src/metadataUtils.js";
+import { extractMetadata, parseAndValidateUrl, readBodyWithLimit } from "#metadataUtils";
 
 describe("parseAndValidateUrl", () => {
   test("throws when url is missing", () => {

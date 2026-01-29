@@ -3,6 +3,14 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "imports": {
+    "#app": "./dist/src/app.js",
+    "#config": "./dist/src/config.js",
+    "#redis": "./dist/src/redis.js",
+    "#metadataUtils": "./dist/src/metadataUtils.js",
+    "#routes/*": "./dist/src/routes/*.js",
+    "#src/*": "./dist/src/*.js"
+  },
   "engines": {
     "node": ">=18"
   },

@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { Router } from "express";
-import { getRedisStatus } from "../redis.js";
+import { getRedisStatus } from "#redis";
 
 export function createHealthRouter() {
   const router = Router();

@@ -1,8 +1,8 @@
 import cors from "cors";
 import express from "express";
 import type { Express } from "express";
-import { createHealthRouter } from "./routes/health.js";
-import { createMetadataRouter } from "./routes/metadata.js";
+import { createHealthRouter } from "#routes/health";
+import { createMetadataRouter } from "#routes/metadata";
 
 export function createApp(): Express {
   const app = express();

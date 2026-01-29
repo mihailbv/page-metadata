@@ -16,7 +16,7 @@ describe("config env parsing", () => {
     delete process.env.CACHE_TTL_SECONDS;
     delete process.env.REDIS_URL;
 
-    const mod = await import(`../src/config.js?case=defaults-${Date.now()}`);
+    const mod = await import(`../src/config.ts?case=defaults-${Date.now()}`);
 
     expect(mod.PORT).toBe(3000);
     expect(mod.FETCH_TIMEOUT_MS).toBe(12_000);
@@ -34,7 +34,7 @@ describe("config env parsing", () => {
       REDIS_URL: "redis://example:6379",
     };
 
-    const mod = await import(`../src/config.js?case=custom-${Date.now()}`);
+    const mod = await import(`../src/config.ts?case=custom-${Date.now()}`);
 
     expect(mod.PORT).toBe(1234);
     expect(mod.FETCH_TIMEOUT_MS).toBe(250);
